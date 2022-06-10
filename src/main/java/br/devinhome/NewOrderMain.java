@@ -30,7 +30,7 @@ public class NewOrderMain {
                 e.printStackTrace();
                 return;
             }
-            System.out.println("Sucesso enviando "
+            System.out.println("Send sucess "
                     + recordMetadata.topic() + ":::"
                     + recordMetadata.partition() + "/"
                     + recordMetadata.offset() + "/"
