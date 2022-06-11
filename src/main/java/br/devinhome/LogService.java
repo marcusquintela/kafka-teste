@@ -8,11 +8,13 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
-public class EmailService {
+public class LogService {
     public static void main(String[] args) {
         var consumer = new KafkaConsumer<String, String>(getProperties());
-        consumer.subscribe(Collections.singleton(TopicsFromKafka.ECOMMERCE_SEND_EMAIL.name()));
+        // Expressão regular  para comsumir todos os topico iniciados com ECOMMERCE
+        consumer.subscribe(Pattern.compile("ECOMMERCE.*"));
 //        consumer.poll(0);
 //        consumer.seekToBeginning(consumer.assignment());
         while (true){
@@ -20,9 +22,9 @@ public class EmailService {
 
             if (!records.isEmpty()) {
                 System.out.println("-----------------------------------------");
-                System.out.println("Find "+records.count()+" email.");
+                System.out.println("Find "+records.count()+" records.");
                 records.forEach(stringStringConsumerRecord -> {
-                    System.out.println("Send email "
+                    System.out.println("Log "
                             + stringStringConsumerRecord.topic() + ":::"
                             + stringStringConsumerRecord.key() + "/"
                             + stringStringConsumerRecord.partition() + "/"
@@ -38,7 +40,7 @@ public class EmailService {
         properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:29092");
         properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, EmailService.class.getSimpleName());
+        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, LogService.class.getSimpleName());
         return properties;
     }
 }
