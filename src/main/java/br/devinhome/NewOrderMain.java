@@ -16,10 +16,11 @@ public class NewOrderMain {
         var producer = new KafkaProducer<String, String>(getProperties());
         var value = "132123,67523,7894589745";
 
-        var record = new ProducerRecord<>("ECOMMERCE_ORDER_NEW", value, value);
+        var record = new ProducerRecord<>(TopicsFromKafka.ECOMMERCE_ORDER_NEW.name(), value, value);
         producer.send(record, getCallback()).get();
 
-        var emailRecord =  new ProducerRecord<>("ECOMMERCE_ORDER_NEW", value, value);
+        var email = "Hello, Thank you for uoar order! We are processing your order! ";
+        var emailRecord =  new ProducerRecord<>(TopicsFromKafka.ECOMMERCE_SEND_EMAIL.name(), email, email);
         producer.send(emailRecord, getCallback()).get();
 
     }
